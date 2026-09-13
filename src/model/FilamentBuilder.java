@@ -3,10 +3,10 @@ package model;
 public class FilamentBuilder {
     String name;
     String manufacturerName;
-    double nozzleTemperature;
-    double bedTemperature;
-    double pricePerKg;
-    double weightGram;
+    float nozzleTemperature;
+    float bedTemperature;
+    float pricePerKg;
+    float weightGram;
     String color="White";
     boolean isFlexible=false;
 
@@ -23,24 +23,24 @@ public class FilamentBuilder {
     }
 
 
-    public FilamentBuilder setNozzleTemperature(double nozzleTemperature){
+    public FilamentBuilder setNozzleTemperature(float nozzleTemperature){
         this.nozzleTemperature = nozzleTemperature;
         return this;
     }
 
 
-    public FilamentBuilder setBedTemperature(double bedTemperature){
+    public FilamentBuilder setBedTemperature(float bedTemperature){
         this.bedTemperature = bedTemperature;
         return this;
     }
 
 
-    public FilamentBuilder setPricePerKg(double pricePerKg){
+    public FilamentBuilder setPricePerKg(float pricePerKg){
         this.pricePerKg = pricePerKg;
         return this;
     }
 
-    public FilamentBuilder setWeightGram(double weightGram){
+    public FilamentBuilder setWeightGram(float weightGram){
         this.weightGram = weightGram;
         return this;
     }

@@ -3,10 +3,10 @@ package model;
 public class Filament {
     private String name;
     private String manufacturerName;
-    private double nozzleTemperature;
-    private double bedTemperature;
-    private double pricePerKg;
-    private double weightGram;
+    private float nozzleTemperature;
+    private float bedTemperature;
+    private float pricePerKg;
+    private float weightGram;
     private String color;
     private boolean isFlexible;
 
@@ -28,27 +28,27 @@ public class Filament {
         return manufacturerName;
     }
 
-    public double getNozzleTemperature(){
+    public float getNozzleTemperature(){
         return nozzleTemperature;
     }
 
-    public double getBedTemperature(){
+    public float getBedTemperature(){
         return bedTemperature;
     }
 
-    public double getPricePerKg() {
+    public float getPricePerKg() {
         return pricePerKg;
     }
 
-    public double getWeightGram() {
+    public float getWeightGram() {
         return weightGram;
     }
 
-    private String getColor(){
+    public String getColor(){
         return color;
     }
 
-    private boolean isFlexible(){
+    public boolean isFlexible(){
         return isFlexible;
     }
 }

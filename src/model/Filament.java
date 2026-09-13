@@ -51,4 +51,15 @@ public class Filament {
     public boolean isFlexible(){
         return isFlexible;
     }
+
+    @Override
+    public String toString(){
+        return "Filament: " + name+
+                "Nozzle temperature: " +nozzleTemperature + "*C"+
+                "Bed temperature: " + bedTemperature + "*C"+
+                "Price: " + pricePerKg +"KZT/kg"+
+                "Weight: " +weightGram +"g"+
+                "Color: "+color+
+                "Flexible: " +isFlexible;
+    }
 }

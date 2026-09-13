@@ -1,24 +1,48 @@
 import model.Filament;
 import model.FilamentBuilder;
+import model.FilamentDirector;
 
 import java.nio.file.FileAlreadyExistsException;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
 
-        FilamentBuilder builder = new FilamentBuilder();
-        builder = builder.setName("PLA");
-        builder = builder.setManufacturerName("3D Flash");
-        builder = builder.setNozzleTemperature(215);
-        builder = builder.setBedTemperature(55);
-        builder = builder.setPricePerKg(7800);
-        builder = builder.setWeightGram(1000);
-        builder = builder.setColor("White");
-        builder = builder.setFlexible(false);
 
-        Filament PLA = new Filament(builder);
-        System.out.println(PLA.getName()+PLA.getManufacturerName()+PLA.getBedTemperature()+PLA.getNozzleTemperature()+PLA.getWeightGram()+PLA.getPricePerKg()+PLA.isFlexible()+PLA.getColor());
+
+
+        FilamentDirector director = new FilamentDirector();
+
+        Filament standardPLA = director.createStandardPLA(new FilamentBuilder());
+        Filament standardABS = director.createStandardABS(new FilamentBuilder());
+        Filament standardTPU = director.createStandardTPU(new FilamentBuilder());
+
+        try {
+            Filament customPetG = new FilamentBuilder()
+                    .setName("Pet G")
+                    .setManufacturerName("Bamboo")
+                    .setBedTemperature(60)
+                    .setNozzleTemperature(86)
+                    .setWeightGram(1000)
+                    .setPricePerKg(2000)
+                    .setColor("Red")
+                    .setFlexible(false)
+                    .build();
+
+            System.out.println("Создан филамент: " + customPetG);
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            System.out.println("Ошибка валидации: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Произошла ошибка: " + e.getMessage());
+        }
+
+
+        System.out.println(standardPLA);
+
+        System.out.println(standardABS);
+
+        System.out.println(standardTPU);
+
+
+
     }
 }

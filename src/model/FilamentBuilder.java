@@ -66,7 +66,7 @@ public class FilamentBuilder {
             throw new IllegalStateException("Filament Manufacturer name cannot be empty");
         }
         if (bedTemperature < 20 || bedTemperature > 150) {
-            throw new IllegalArgumentException("Invalid nozzle temperature: " + bedTemperature);
+            throw new IllegalArgumentException("Invalid bed temperature: " + bedTemperature);
         }
         return new Filament(this);
     }

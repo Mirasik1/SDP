@@ -2,8 +2,6 @@ import model.Filament;
 import model.FilamentBuilder;
 import model.FilamentDirector;
 
-import java.nio.file.FileAlreadyExistsException;
-
 public class Main {
     public static void main(String[] args) {
 

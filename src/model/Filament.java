@@ -12,6 +12,7 @@ public class Filament {
 
     public Filament(FilamentBuilder builder){
         this.name = builder.name;
+        this.manufacturerName = builder.manufacturerName;
         this.nozzleTemperature = builder.nozzleTemperature;
         this.bedTemperature = builder.bedTemperature;
         this.pricePerKg = builder.pricePerKg;
@@ -55,11 +56,11 @@ public class Filament {
     @Override
     public String toString(){
         return "Filament: " + name+
-                "Nozzle temperature: " +nozzleTemperature + "*C"+
-                "Bed temperature: " + bedTemperature + "*C"+
-                "Price: " + pricePerKg +"KZT/kg"+
-                "Weight: " +weightGram +"g"+
-                "Color: "+color+
-                "Flexible: " +isFlexible;
+                " - Nozzle temperature: " +nozzleTemperature + "*C"+
+                " - Bed temperature: " + bedTemperature + "*C"+
+                " - Price: " + pricePerKg +"KZT/kg"+
+                " - Weight: " +weightGram +"g"+
+                " - Color: "+color+
+                " - Flexible: " +isFlexible;
     }
 }

@@ -1,6 +1,18 @@
-# Filament for 3D Printing Project
+# 3D Printing System (Factory Method & Abstract Factory)
 
 ## Project Structure
+* `src/factory/product/PrintProfile.java`
+* `src/factory/product/PlaPrintProfile.java`
+* `src/factory/product/AbsPrintProfile.java`
+* `src/factory/creator/PrintProfileFactory.java`
+* `src/factory/creator/PlaProfileFactory.java`
+* `src/factory/creator/AbsProfileFactory.java`
+* `src/factory/abstract_factory/product/Nozzle.java`
+* `src/factory/abstract_factory/product/BrassNozzle.java`
+* `src/factory/abstract_factory/product/HardenedSteelNozzle.java`
+* `src/factory/abstract_factory/factory/PrintEquipmentFactory.java`
+* `src/factory/abstract_factory/factory/PlaEquipmentFactory.java`
+* `src/factory/abstract_factory/factory/AbsEquipmentFactory.java`
 * `src/model/Filament.java`
 * `src/model/FilamentBuilder.java`
 * `src/director/FilamentDirector.java`
@@ -9,97 +21,82 @@
 ---
 
 ## Project Description
-This project is designed to manage 3D printer configurations and printing material properties. As the first step toward implementing a larger 3D printing automation system, a dedicated subsystem for plastic type configuration was developed.
+This project manages 3D printer execution profiles, material configurations, and hardware equipment setups.
 
-The **Builder** pattern is ideal for this domain because different filaments possess unique physical and thermal properties. At the same time, many base plastic types share common specifications and differ only by a few parameters. Using a builder provides flexible object configuration and allows seamless creation of standard presets.
+1. **Factory Method (Part A):** Implemented to dynamically create individual print execution profiles (`PrintProfile`). It encapsulates creation logic into specific creators (`PlaProfileFactory`, `AbsProfileFactory`), avoiding hardcoded conditions.
+2. **Abstract Factory (Part B):** Extended to build consistent families of related products (`PrintProfile` + `Nozzle`). Each concrete factory (`PlaEquipmentFactory`, `AbsEquipmentFactory`) produces a fully compatible setup for a specific material ecosystem, ensuring hardware parameters match polymer requirements.
 
 ---
 
 ## Technical Requirements Coverage
-* **Product (`Filament`):** Stores and maintains all physical and thermal specifications of the material.
-* **Builder (`FilamentBuilder`):** Implements step-by-step object construction using a Fluent API.
-* **Director (`FilamentDirector`):** Handles fast generation of common plastic presets (PLA, ABS, TPU).
-* **Client (`Main`):** Tests custom configuration assembly, director preset creation, and exception handling.
+
+### Part A: Factory Method
+* **Product (`PrintProfile`):** Interface declaring print execution contracts.
+* **Concrete Products (`PlaPrintProfile`, `AbsPrintProfile`):** Material-specific profile behavior.
+* **Creator (`PrintProfileFactory`):** Abstract class declaring the factory method `createProfile()`
+* **Concrete Creators (`PlaProfileFactory`, `AbsProfileFactory`):** Overrides factory method to instantiate individual products.
+
+### Part B: Abstract Factory
+* **Abstract Products (`PrintProfile`, `Nozzle`):** Interfaces defining family product behaviors.
+* **Concrete Products (`BrassNozzle`, `HardenedSteelNozzle`):** Hardware implementations corresponding to material demands.
+* **Abstract Factory (`PrintEquipmentFactory`):** Interface declaring creation methods for all products in the family.
+* **Concrete Factories (`PlaEquipmentFactory`, `AbsEquipmentFactory`):** Instantiates fully compatible product families.
+* **Client (`Main`):** Interacts strictly through abstract factory and product interfaces without direct class coupling.
 
 ---
 
 ## 5 Clean Code Principles Applied
 
 ### 1. Single Responsibility Principle (SRP)
-Each class and method is focused strictly on a single task[cite: 1, 2]. `Filament` represents data, `FilamentBuilder` handles construction and validation, and `FilamentDirector` manages presets.
+Each class performs one isolated job. Product classes encapsulate domain behavior, while factory classes handle object creation and setup consistency.
 
 ### 2. Meaningful and Consistent Naming
-Every function and variable uses concise and explicit naming. Method names strictly follow naming conventions: action prefix (`get` / `set`) followed by the property name (e.g., `setName`, `getName`).
+Variable and method names explicitly convey their intent using standard Java action prefixes (`create`, `get`, `start`), eliminating the need for comments.
 
 ```java
 // BEFORE
-public String n() { return name; }
-public void change(String val) { name = val; }
+public PrintProfile make() { return new PlaPrintProfile(); }
 
 // AFTER
-public String getName() {
-    return name;
-}
-
-public FilamentBuilder setName(String name) {
-    this.name = name;
-    return this;
+public PrintProfile createPrintProfile() {
+    return new PlaPrintProfile();
 }
 ```
-### 3. Validated Construction
-The build() method guarantees that an object cannot be instantiated in an invalid state[cite: 1, 2]. Explicit IllegalStateException and IllegalArgumentException are thrown upon invalid state detection.
+3. Dependency Inversion Principle (DIP)
+   High-level execution logic relies exclusively on abstract interfaces (PrintEquipmentFactory, PrintProfile, Nozzle) rather than concrete classes.
 ```java
 // BEFORE
-public Filament build() {
-    return new Filament(this); // Instantiates object without checks
-}
+PlaPrintProfile profile = new PlaPrintProfile();
+BrassNozzle nozzle = new BrassNozzle();
 
 // AFTER
-public Filament build() {
-    if (name == null || name.trim().isEmpty()) {
-        throw new IllegalStateException("Filament name cannot be empty");
-    }
-    if (nozzleTemperature < 150 || nozzleTemperature > 450) {
-        throw new IllegalArgumentException("Invalid nozzle temperature: " + nozzleTemperature);
-    }
-    if (manufacturerName == null || manufacturerName.trim().isEmpty()) {
-        throw new IllegalStateException("Filament Manufacturer name cannot be empty");
-    }
-    if (bedTemperature < 20 || bedTemperature > 150) {
-        throw new IllegalArgumentException("Invalid bed temperature: " + bedTemperature);
-    }
-    return new Filament(this);
+PrintEquipmentFactory factory = new PlaEquipmentFactory();
+PrintProfile profile = factory.createPrintProfile();
+Nozzle nozzle = factory.createNozzle();
+```
+4. Open/Closed Principle (OCP)
+   New polymer ecosystems (e.g., TPU with a flexible-compatible nozzle) can be added by creating new product and factory classes without modifying existing system code.
+```java
+// BEFORE
+if (type.equals("PLA")) { ... } else if (type.equals("ABS")) { ... }
+
+// AFTER
+public class TpuEquipmentFactory implements PrintEquipmentFactory {
+    @Override
+    public PrintProfile createPrintProfile() { return new TpuPrintProfile(); }
+    @Override
+    public Nozzle createNozzle() { return new StainlessSteelNozzle(); }
 }
 ```
-
-## 4. Domain-Driven Limits (No Magic Numbers)
-Validation boundary values are not arbitrary magic numbers. Temperature ranges (150°C–450°C for the nozzle, 20°C–150°C for the bed) were determined from hardware specifications and operating parameters of commercial 3D printers on the market.
+5. Encapsulation & Polymorphism
+   Product states and manufacturing choices are encapsulated within concrete implementations, allowing clients to invoke polymorphic execution through shared abstractions.
 ```java
 // BEFORE
-if (temp < 0 || temp > 1000) { ... }
+public String nozzleMat = "Brass";
 
 // AFTER
-// Operating hotend temperature limits based on market hardware specs
-        if (nozzleTemperature < 150 || nozzleTemperature > 450) {
-        throw new IllegalArgumentException("Invalid nozzle temperature: " + nozzleTemperature);
-}
-```
-## 5. Encapsulation & Immutable State
-All fields in the Filament class are declared as private. Data access is restricted strictly to getters, protecting object state from unwanted mutations during execution.
-```java
-// BEFORE
-public String name;
-public float nozzleTemperature;
-
-// AFTER
-private String name;
-private float nozzleTemperature;
-
-public String getName() {
-    return name;
-}
-
-public float getNozzleTemperature() {
-    return nozzleTemperature;
+@Override
+public String getMaterial() {
+    return "Brass (Латунь)";
 }
 ```

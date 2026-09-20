@@ -13,9 +13,6 @@
 * `src/factory/abstract_factory/factory/PrintEquipmentFactory.java`
 * `src/factory/abstract_factory/factory/PlaEquipmentFactory.java`
 * `src/factory/abstract_factory/factory/AbsEquipmentFactory.java`
-* `src/model/Filament.java`
-* `src/model/FilamentBuilder.java`
-* `src/director/FilamentDirector.java`
 * `src/Main.java`
 
 ---
@@ -62,7 +59,7 @@ public PrintProfile createPrintProfile() {
     return new PlaPrintProfile();
 }
 ```
-3. Dependency Inversion Principle (DIP)
+### 3. Dependency Inversion Principle (DIP)
    High-level execution logic relies exclusively on abstract interfaces (PrintEquipmentFactory, PrintProfile, Nozzle) rather than concrete classes.
 ```java
 // BEFORE
@@ -74,7 +71,7 @@ PrintEquipmentFactory factory = new PlaEquipmentFactory();
 PrintProfile profile = factory.createPrintProfile();
 Nozzle nozzle = factory.createNozzle();
 ```
-4. Open/Closed Principle (OCP)
+### 4. Open/Closed Principle (OCP)
    New polymer ecosystems (e.g., TPU with a flexible-compatible nozzle) can be added by creating new product and factory classes without modifying existing system code.
 ```java
 // BEFORE
@@ -88,7 +85,7 @@ public class TpuEquipmentFactory implements PrintEquipmentFactory {
     public Nozzle createNozzle() { return new StainlessSteelNozzle(); }
 }
 ```
-5. Encapsulation & Polymorphism
+### 5. Encapsulation & Polymorphism
    Product states and manufacturing choices are encapsulated within concrete implementations, allowing clients to invoke polymorphic execution through shared abstractions.
 ```java
 // BEFORE

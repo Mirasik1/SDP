@@ -1,11 +1,11 @@
 package factory.creator;
 
 import factory.product.AbsPrintProfile;
-import factory.product.PrintProfile;
+import factory.product.IPrintProfile;
 
 public class AbsProfileFactory extends PrintProfileFactory {
     @Override
-    public PrintProfile createProfile() {
+    public IPrintProfile createProfile() {
         return new AbsPrintProfile();
     }
 }

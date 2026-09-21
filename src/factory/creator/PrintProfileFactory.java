@@ -1,13 +1,13 @@
 package factory.creator;
 
-import factory.product.PrintProfile;
+import factory.product.IPrintProfile;
 
 public abstract class PrintProfileFactory{
 
-    public abstract PrintProfile createProfile();
+    public abstract IPrintProfile createProfile();
 
     public void startPrintingProcess() {
-        PrintProfile profile = createProfile();
+        IPrintProfile profile = createProfile();
         System.out.println("Starting calibration for nozzle at " + profile.getNozzleTemperature() + "°C...");
         profile.print();
     }

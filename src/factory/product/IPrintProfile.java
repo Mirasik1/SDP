@@ -1,6 +1,6 @@
 package factory.product;
 
-public interface PrintProfile {
+public interface IPrintProfile {
     void print();
     int getNozzleTemperature();
     int getBedTemperature();

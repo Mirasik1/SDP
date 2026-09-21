@@ -1,6 +1,6 @@
 package factory.product;
 
-public class AbsPrintProfile implements PrintProfile {
+public class AbsPrintProfile implements IPrintProfile {
     @Override
     public void print() {
         System.out.println("Printing with ABS");

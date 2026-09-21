@@ -1,19 +1,18 @@
 package factory.abstract_factory.factory;
 
-import factory.abstract_factory.product.Nozzle;
-import factory.product.PrintProfile;
+import factory.abstract_factory.product.INozzle;
+import factory.product.IPrintProfile;
 import factory.abstract_factory.product.HardenedSteelNozzle;
-import factory.abstract_factory.product.Nozzle;
 import factory.product.AbsPrintProfile;
-import factory.product.PrintProfile;
-public class AbsEquipmentFactory implements PrintEquipmentFactory{
+
+public class AbsEquipmentFactory implements IPrintEquipmentFactory {
     @Override
-    public PrintProfile createPrintProfile() {
+    public IPrintProfile createPrintProfile() {
         return new AbsPrintProfile();
     }
 
     @Override
-    public Nozzle createNozzle() {
+    public INozzle createNozzle() {
         return new HardenedSteelNozzle();
     }
 }

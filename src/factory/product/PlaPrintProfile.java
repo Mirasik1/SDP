@@ -1,6 +1,6 @@
 package factory.product;
 
-public class PlaPrintProfile implements PrintProfile {
+public class PlaPrintProfile implements IPrintProfile {
 
     @Override
     public void print() {

@@ -1,6 +1,6 @@
 package factory.abstract_factory.product;
 
-public class BrassNozzle implements Nozzle{
+public class BrassNozzle implements INozzle {
     @Override
     public String getMaterial() {
         return "Brass";

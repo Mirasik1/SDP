@@ -1,20 +1,28 @@
 import factory.abstract_factory.factory.IPrintEquipmentFactory;
 import factory.creator.AbsProfileFactory;
+import factory.creator.PlaProfileFactory;
 import factory.creator.PrintProfileFactory;
 import factory.abstract_factory.factory.AbsEquipmentFactory;
 import factory.abstract_factory.factory.PlaEquipmentFactory;
 import factory.abstract_factory.product.INozzle;
+import factory.product.AbsPrintProfile;
 import factory.product.IPrintProfile;
 
 public class Main {
     public static void main(String[] args) {
 
 
-        PrintProfileFactory plaFactory = new AbsProfileFactory();
+        PrintProfileFactory plaFactory = new PlaProfileFactory();
         plaFactory.startPrintingProcess();
 
         PrintProfileFactory absFactory = new AbsProfileFactory();
         absFactory.startPrintingProcess();
+
+        IPrintProfile abs = (IPrintProfile) absFactory.createProfile();
+        System.out.println(abs.getNozzleTemperature());
+
+        IPrintProfile pla = (IPrintProfile) plaFactory.createProfile();
+        System.out.println(pla.getNozzleTemperature());
 
         IPrintEquipmentFactory plaEquipment = new PlaEquipmentFactory();
         IPrintProfile plaProfile = plaEquipment.createPrintProfile();

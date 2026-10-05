@@ -1,99 +1,90 @@
-# 3D Printing System (Factory Method & Abstract Factory)
+# 3D Printing System (Bridge Pattern)
 
 ## Project Structure
-* `src/factory/product/PrintProfile.java`
-* `src/factory/product/PlaPrintProfile.java`
-* `src/factory/product/AbsPrintProfile.java`
-* `src/factory/creator/PrintProfileFactory.java`
-* `src/factory/creator/PlaProfileFactory.java`
-* `src/factory/creator/AbsProfileFactory.java`
-* `src/factory/abstract_factory/product/Nozzle.java`
-* `src/factory/abstract_factory/product/BrassNozzle.java`
-* `src/factory/abstract_factory/product/HardenedSteelNozzle.java`
-* `src/factory/abstract_factory/factory/PrintEquipmentFactory.java`
-* `src/factory/abstract_factory/factory/PlaEquipmentFactory.java`
-* `src/factory/abstract_factory/factory/AbsEquipmentFactory.java`
-* `src/Main.java`
+* `src/bridge/Filament.java`
+* `src/bridge/PLAFilament.java`
+* `src/bridge/ABSFilament.java`
+* `src/bridge/PETGFilament.java`
+* `src/bridge/PrintJob.java`
+* `src/bridge/PrototypePrintJob.java`
+* `src/bridge/FunctionalPartPrintJob.java`
+* `src/bridge/Main.java`
 
 ---
 
 ## Project Description
-This project manages 3D printer execution profiles, material configurations, and hardware equipment setups.
+This project demonstrates the **Bridge** structural design pattern applied to a 3D printing system by decoupling print job abstractions from low-level polymer filament implementations.
 
-1. **Factory Method (Part A):** Implemented to dynamically create individual print execution profiles (`PrintProfile`). It encapsulates creation logic into specific creators (`PlaProfileFactory`, `AbsProfileFactory`), avoiding hardcoded conditions.
-2. **Abstract Factory (Part B):** Extended to build consistent families of related products (`PrintProfile` + `Nozzle`). Each concrete factory (`PlaEquipmentFactory`, `AbsEquipmentFactory`) produces a fully compatible setup for a specific material ecosystem, ensuring hardware parameters match polymer requirements.
+1. **Implementor Hierarchy (`Filament`):** Encapsulates material-specific properties such as extruder temperature, bed temperature, print speed, and layer cooling mechanics (`PLAFilament`, `ABSFilament`, `PETGFilament`).
+2. **Abstraction Hierarchy (`PrintJob`):** Manages high-level printing workflow logic (`PrototypePrintJob`, `FunctionalPartPrintJob`). It references a `Filament` instance via composition, enabling runtime switching of print materials without modifying print job abstractions.
 
 ---
 
 ## Technical Requirements Coverage
 
-### Part A: Factory Method
-* **Product (`PrintProfile`):** Interface declaring print execution contracts.
-* **Concrete Products (`PlaPrintProfile`, `AbsPrintProfile`):** Material-specific profile behavior.
-* **Creator (`PrintProfileFactory`):** Abstract class declaring the factory method `createProfile()`
-* **Concrete Creators (`PlaProfileFactory`, `AbsProfileFactory`):** Overrides factory method to instantiate individual products.
+### Implementor & Concrete Implementors
+* **Implementor (`Filament`):** Interface declaring low-level physical operations and material properties.
+* **Concrete Implementors (`PLAFilament`, `ABSFilament`, `PETGFilament`):** Specific implementations providing temperature, speed, and cooling configurations tailored to each material.
 
-### Part B: Abstract Factory
-* **Abstract Products (`PrintProfile`, `Nozzle`):** Interfaces defining family product behaviors.
-* **Concrete Products (`BrassNozzle`, `HardenedSteelNozzle`):** Hardware implementations corresponding to material demands.
-* **Abstract Factory (`PrintEquipmentFactory`):** Interface declaring creation methods for all products in the family.
-* **Concrete Factories (`PlaEquipmentFactory`, `AbsEquipmentFactory`):** Instantiates fully compatible product families.
-* **Client (`Main`):** Interacts strictly through abstract factory and product interfaces without direct class coupling.
+### Abstraction & Refined Abstractions
+* **Abstraction (`PrintJob`):** Abstract class holding a reference to a `Filament` instance and defining the contract for executing print jobs.
+* **Refined Abstractions (`PrototypePrintJob`, `FunctionalPartPrintJob`):** Specific task abstractions that adapt execution velocity and infill precision based on model purpose.
+
+### Client
+* **Client (`Main`):** Composes a `PrintJob` with a `Filament` implementation at runtime and demonstrates switching filament implementations on the fly via setter injection.
 
 ---
 
 ## 5 Clean Code Principles Applied
 
 ### 1. Single Responsibility Principle (SRP)
-Each class performs one isolated job. Product classes encapsulate domain behavior, while factory classes handle object creation and setup consistency.
+Each class has a single, well-defined reason to change. `PrintJob` handles high-level printing workflows, while `Filament` implementations isolate material-specific hardware parameters.
 
-### 2. Meaningful and Consistent Naming
-Variable and method names explicitly convey their intent using standard Java action prefixes (`create`, `get`, `start`), eliminating the need for comments.
+### 2. Open/Closed Principle (OCP)
+The system is open for extension but closed for modification. New filament types (e.g., `NylonFilament`) or new print job abstractions (e.g., `HighPrecisionPrintJob`) can be introduced without altering existing code.
 
 ```java
-// BEFORE
-public PrintProfile make() { return new PlaPrintProfile(); }
+// BEFORE (adding new material required editing execution logic)
+if (material.equals("PLA")) { ... } else if (material.equals("ABS")) { ... }
 
-// AFTER
-public PrintProfile createPrintProfile() {
-    return new PlaPrintProfile();
+// AFTER (adding a new material requires only a new class implementing Filament)
+public class NylonFilament implements Filament {
+    @Override
+    public String getType() { return "Nylon"; }
+    // ...
 }
 ```
 ### 3. Dependency Inversion Principle (DIP)
-   High-level execution logic relies exclusively on abstract interfaces (PrintEquipmentFactory, PrintProfile, Nozzle) rather than concrete classes.
+High-level print job abstractions depend strictly on the abstract Filament interface rather than concrete material classes, decoupling business logic from low-level implementation details.
 ```java
 // BEFORE
-PlaPrintProfile profile = new PlaPrintProfile();
-BrassNozzle nozzle = new BrassNozzle();
+private PLAFilament filament = new PLAFilament();
 
 // AFTER
-PrintEquipmentFactory factory = new PlaEquipmentFactory();
-PrintProfile profile = factory.createPrintProfile();
-Nozzle nozzle = factory.createNozzle();
-```
-### 4. Open/Closed Principle (OCP)
-   New polymer ecosystems (e.g., TPU with a flexible-compatible nozzle) can be added by creating new product and factory classes without modifying existing system code.
-```java
-// BEFORE
-if (type.equals("PLA")) { ... } else if (type.equals("ABS")) { ... }
+protected Filament filament;
 
-// AFTER
-public class TpuEquipmentFactory implements PrintEquipmentFactory {
-    @Override
-    public PrintProfile createPrintProfile() { return new TpuPrintProfile(); }
-    @Override
-    public Nozzle createNozzle() { return new StainlessSteelNozzle(); }
+public PrintJob(Filament filament) {
+    this.filament = filament;
 }
 ```
-### 5. Encapsulation & Polymorphism
-   Product states and manufacturing choices are encapsulated within concrete implementations, allowing clients to invoke polymorphic execution through shared abstractions.
+### 4. Meaningful and Consistent Naming
+Class and method names explicitly convey their architectural roles within the Bridge pattern using standard domain vocabulary (PrintJob, Filament, coolLayer, getExtruderTemperature), avoiding vague terms.
+
 ```java
 // BEFORE
-public String nozzleMat = "Brass";
+public void run() { ... }
 
 // AFTER
-@Override
-public String getMaterial() {
-    return "Brass (Латунь)";
-}
+public void printModel(String modelName) { ... }
+```
+
+### 5. Encapsulation & Composition Over Inheritance
+Low-level behavior is delegated through composition rather than deep class inheritance, permitting dynamic switching of material implementations at runtime via setter injection.
+```java
+// BEFORE
+public class PrototypePLAPrintJob extends PrintJob { ... }
+
+// AFTER
+PrintJob job = new PrototypePrintJob(pla);
+job.setFilament(petg); // dynamic swap without re-instantiating the job
 ```

@@ -7,5 +7,7 @@ public class Main {
         printerFacade.startPrintWorkflow("gear_component.stl", "ABS", "Functional");
         System.out.println();
         printerFacade.startPrintWorkflow("cat_figurine.stl", "PLA", "Prototype");
+        System.out.println();
+        printerFacade.startPrintWorkflow("document.docx", "Plastic", "Fundament");
     }
 }

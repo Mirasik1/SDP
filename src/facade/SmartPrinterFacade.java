@@ -11,15 +11,13 @@ import factory.abstract_factory.factory.PlaEquipmentFactory;
 import factory.abstract_factory.factory.AbsEquipmentFactory;
 import factory.abstract_factory.product.INozzle;
 import factory.product.IPrintProfile;
-import facade.MeshValidator;
-import facade.PrintNotifier;
 
 public class SmartPrinterFacade {
-    private final MeshValidator validator;
+    private final FileValidator validator;
     private final PrintNotifier notifier;
 
     public SmartPrinterFacade() {
-        this.validator = new MeshValidator();
+        this.validator = new FileValidator();
         this.notifier = new PrintNotifier();
     }
 
@@ -27,7 +25,7 @@ public class SmartPrinterFacade {
         System.out.println("=== ЗАПУСК АВТОМАТИЗИРОВАННОГО ПРОЦЕССА ПЕЧАТИ ===");
 
         if (!validator.validate(modelPath)) {
-            notifier.notifyError("Модель содержит ошибки геометрии!");
+            notifier.notifyError("Модель не подходит по формату");
             return;
         }
 

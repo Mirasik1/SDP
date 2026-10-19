@@ -6,6 +6,8 @@ import bridge.ABSFilament;
 import bridge.PrintJob;
 import bridge.PrototypePrintJob;
 import bridge.FunctionalPrintJob;
+import facade.subsystem.FileValidator;
+import facade.subsystem.PrintNotifier;
 import factory.abstract_factory.factory.IPrintEquipmentFactory;
 import factory.abstract_factory.factory.PlaEquipmentFactory;
 import factory.abstract_factory.factory.AbsEquipmentFactory;

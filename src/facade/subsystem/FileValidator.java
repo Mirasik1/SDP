@@ -1,4 +1,4 @@
-package facade;
+package facade.subsystem;
 
 public class FileValidator {
     public boolean validate(String modelPath) {

@@ -1,4 +1,4 @@
-package facade;
+package facade.subsystem;
 
 public class PrintNotifier {
     public void notifyStart(String modelName) {

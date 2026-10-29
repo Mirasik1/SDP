@@ -8,6 +8,6 @@ public class Main {
         System.out.println();
         printerFacade.startPrintWorkflow("cat_figurine.stl", "PLA", "Prototype");
         System.out.println();
-        printerFacade.startPrintWorkflow("document.docx", "Plastic", "Fundament");
+        printerFacade.startPrintWorkflow("document.stl", "Plastic", "Fundament");
     }
 }
